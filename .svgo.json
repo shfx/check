@@ -1,0 +1,30 @@
+{
+  "multipass": true,
+  "plugins": [
+    {
+      "collapseGroups": false
+    },
+    {
+      "removeViewBox": false
+    },
+    {
+      "inlineStyles": false
+    },
+    {
+      "convertStyleToAttrs": false
+    },
+    {
+      "removeStyleElement": false
+    },
+    {
+      "minifyStyles": false
+    },
+    {
+      "addViewBox": true
+    }
+  ],
+  "js2svg": {
+    "pretty": true,
+    "indent": "  "
+  }
+}

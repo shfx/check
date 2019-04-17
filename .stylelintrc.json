@@ -1,0 +1,14 @@
+{
+ "extends": "stylelint-config-standard",
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "order/order": ["custom-properties","declarations"],
+    "no-descending-specificity": 0,
+    "no-empty-first-line": 2,
+    "color-no-invalid-hex": 2,
+    "font-family-no-duplicate-names": 2,
+    "max-empty-lines": 1,
+    "indentation": 2,
+    "order/properties-alphabetical-order": 2
+  }
+}
