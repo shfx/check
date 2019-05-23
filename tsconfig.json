@@ -1,12 +1,11 @@
 {
   "include": [
-    "src/**/*.ts",
-    "index.ts"
+    "./src/**/*.ts"
   ],
   "exclude": [
     "./node_modules",
     ".git",
-  ],
+  ],  
   "compilerOptions": {
     "outDir": "dist",
     "target": "es2015",

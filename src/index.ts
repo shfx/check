@@ -30,7 +30,7 @@ program
   });
 
 const gitListStaged =
-  "git status --short --untracked-files=no | awk '{print $2}'";
+  "git status --no-renames --porcelain --untracked-files=no | grep -e '^M' -e '^ M' -e '^A' | awk '{print $2}'";
 
 program
   .command('staged', undefined, { isDefault: true })

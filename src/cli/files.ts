@@ -1,7 +1,6 @@
 import * as path from 'path';
 
 import commander from 'commander';
-import notifier from 'node-notifier';
 
 import * as checkers from '../checkers';
 import { Warning, Error } from '../checkers';
@@ -18,13 +17,20 @@ process.on('SIGINT', () => {
 
 const relativePath = (file: string) => path.relative(process.cwd(), file);
 
-type FielSet = {
+const set: {
   svg: Set<string>;
   img: Set<string>;
   js: Set<string>;
   ts: Set<string>;
   json: Set<string>;
   css: Set<string>;
+} = {
+  svg: new Set(),
+  img: new Set(),
+  js: new Set(),
+  ts: new Set(),
+  json: new Set(),
+  css: new Set(),
 };
 
 let totalCount: number;
@@ -42,7 +48,7 @@ const format = (
   error: string,
   line: number,
   column: number
-) => `${type} ${error} @ ${relativePath(file)}:${line}:${column}`;
+) => `${type} ${error} @ ${relativePath(file)}:${line}​:${column}`;
 
 type Format = {
   errors: number;
@@ -60,38 +66,28 @@ export const files: (
   src: string[],
   args: commander.Command
 ) => Promise<void> = async (src, args) => {
-  const { svg, js, ts, css, json } = src.reduce(
-    (acc: FielSet, value: string) => {
-      if (value.endsWith('.css')) {
-        acc.css.add(value);
-      }
-      if (value.endsWith('.svg')) {
-        acc.svg.add(value);
-      }
-      if (value.endsWith('.js')) {
-        acc.js.add(value);
-      }
-      if (value.endsWith('.ts') || value.endsWith('.tsx')) {
-        acc.ts.add(value);
-      }
-      if (value.endsWith('.json')) {
-        acc.json.add(value);
-      }
-
-      if (value.endsWith('.jpg') || value.endsWith('.png')) {
-        acc.img.add(value);
-      }
-      return acc;
-    },
-    {
-      svg: new Set(),
-      img: new Set(),
-      js: new Set(),
-      ts: new Set(),
-      json: new Set(),
-      css: new Set(),
+  const { svg, js, ts, css, json } = src.reduce((acc, value: string) => {
+    if (value.endsWith('.css')) {
+      acc.css.add(value);
     }
-  );
+    if (value.endsWith('.svg')) {
+      acc.svg.add(value);
+    }
+    if (value.endsWith('.js')) {
+      acc.js.add(value);
+    }
+    if (value.endsWith('.ts') || value.endsWith('.tsx')) {
+      acc.ts.add(value);
+    }
+    if (value.endsWith('.json')) {
+      acc.json.add(value);
+    }
+
+    if (value.endsWith('.jpg') || value.endsWith('.png')) {
+      acc.img.add(value);
+    }
+    return acc;
+  }, set);
 
   totalCount = svg.size + js.size + css.size + json.size;
 
@@ -347,24 +343,12 @@ export const files: (
 
   if (stats.errors > 0) {
     log.fail(`(${status}) (${total})`, false);
-    notifier.notify({
-      title: 'Check',
-      message: `Errors`,
-      contentImage:
-        '/Users/opera_user/Downloads/_ionicons_svg_ios-close-circle.svg',
-    });
     process.exit(1);
   }
 
   if (stats.warnings > 0) {
     log.warn(`(${status}) (${total})`, false);
-    notifier.notify({
-      title: 'Check',
-      message: 'LGTM',
-      contentImage:
-        '/Users/opera_user/Downloads/_ionicons_svg_ios-checkmark-circle.svg',
-    });
-    return;
+    process.exit(0);
   }
 
   log.succeed(`(${status}) (${total})`, false);
