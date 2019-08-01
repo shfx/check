@@ -9,7 +9,7 @@ export const check = async (
 ): Promise<(Warning | Error)[]> => {
   const data = await readFile(file);
 
-  if (!prettier.check(data, { filepath: file })) {
+  if (data && !prettier.check(data, { filepath: file })) {
     return [
       {
         warning: 'File should be formatted (prettier-js)',

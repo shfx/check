@@ -35,7 +35,6 @@ export const check = async (
     if (doFix) {
       const formated = prettierFormat(data, failSafeComfig);
 
-      // console.log(formated);
       await writeFile(file, formated);
     } else {
       output.push({

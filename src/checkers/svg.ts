@@ -21,6 +21,10 @@ export const check = async (
   const data = await readFile(file);
   const output = [];
 
+  if (!data) {
+    return output;
+  }
+
   try {
     const results = await svgoObj.optimize(data, { path: file });
 

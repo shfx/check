@@ -26,6 +26,7 @@ program
   .description('validates listed files')
   .action(async (list: string[], args: Command) => {
     const { files } = await import('./cli/files');
+
     files(list.map(absolutePath), args);
   });
 

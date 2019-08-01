@@ -1,10 +1,7 @@
 import { Linter, CLIEngine } from 'eslint';
-import {
-  check as prettierCheck,
-  format as prettierFormat,
-  resolveConfig,
-  Options,
-} from 'prettier';
+import { format as prettierFormat, resolveConfig, Options } from 'prettier';
+
+import clangFormat from 'clang-format';
 
 import { readFile } from '../readFile';
 import { writeFile } from '../writeFile';
@@ -16,6 +13,7 @@ export const check = async (
   doFix: boolean
 ): Promise<(Warning | Error)[]> => {
   const output: (Warning | Error)[] = [];
+
   let data = await readFile(file);
 
   if (!data) {
@@ -23,15 +21,23 @@ export const check = async (
   }
 
   const prettierConfig = await resolveConfig(file);
+
   const failSafeComfig: Options = {
     ...prettierConfig,
     parser: 'babel',
   };
 
-  if (prettierConfig && !prettierCheck(data, failSafeComfig)) {
+  let formatted;
+
+  if (prettierConfig) {
+    formatted = prettierFormat(data, failSafeComfig);
+  }
+
+  formatted = clangFormat(data, 'utf8', 'file');
+
+  if (formatted && data !== formatted) {
     if (doFix) {
-      const formated = prettierFormat(data, failSafeComfig);
-      await writeFile(file, formated);
+      await writeFile(file, formatted);
     } else {
       output.push({
         warning: 'File should be formatted (prettier-js)',
