@@ -54,14 +54,14 @@ export const check = async (
 
   let msgs: Linter.LintMessage[] = [];
 
-  // if (dofix) {
-  //   const fixedmsg = linter.verifyandfix(data, , file);
-  //   if (!fixedmsg.fixed) {
-  //     msgs = fixedmsg.messages;
-  //   }
-  // } else {
-  //   msgs = linter.verify(data, {}, file);
-  // }
+  if (dofix) {
+    const fixedmsg = linter.verifyandfix(data, , file);
+    if (!fixedmsg.fixed) {
+      msgs = fixedmsg.messages;
+    }
+  } else {
+    msgs = linter.verify(data, {}, file);
+  }
 
   const report = cli.executeOnFiles([file]);
 
